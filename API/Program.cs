@@ -1,4 +1,5 @@
 
+using Core.Interfaces;
 using Infrustructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,7 @@ namespace API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,11 @@ namespace API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+           
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             var connection = builder.Configuration.GetConnectionString("connection");
-            builder.Services.AddDbContext<StoreContext>(context => context.UseSqlServer(connection, c=>c.MigrationsAssembly("Infrustructure")));
+            builder.Services.AddDbContext<StoreContext>
+                (context => context.UseSqlServer(connection, c=>c.MigrationsAssembly("Infrustructure")));
 
             var app = builder.Build();
 
@@ -35,6 +38,22 @@ namespace API
 
 
             app.MapControllers();
+
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var iLoggerFactory = services.GetRequiredService<ILoggerFactory>();
+            try
+            {
+                var context = services.GetRequiredService<StoreContext>();
+                await context.Database.MigrateAsync();
+                await StoreContextSeed.SeedAsync(context, iLoggerFactory);
+            }
+            catch (Exception ex)
+            {
+                var logger = iLoggerFactory.CreateLogger<Program>();
+                logger.LogError(ex, "An error occured during migration");
+                
+            }
 
             app.Run();
         }

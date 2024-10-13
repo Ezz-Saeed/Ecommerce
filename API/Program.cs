@@ -1,4 +1,5 @@
 
+using API.Helpers;
 using Core.Interfaces;
 using Infrustructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,9 @@ namespace API
             builder.Services.AddSwaggerGen();
            
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
             var connection = builder.Configuration.GetConnectionString("connection");
             builder.Services.AddDbContext<StoreContext>
                 (context => context.UseSqlServer(connection, c=>c.MigrationsAssembly("Infrustructure")));
@@ -33,6 +37,8 @@ namespace API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 

@@ -1,8 +1,13 @@
 
+using API.Errors;
+using API.Extensions;
 using API.Helpers;
+using API.MiddleWares;
 using Core.Interfaces;
 using Infrustructure.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -14,27 +19,37 @@ namespace API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
            
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
             var connection = builder.Configuration.GetConnectionString("connection");
             builder.Services.AddDbContext<StoreContext>
                 (context => context.UseSqlServer(connection, c=>c.MigrationsAssembly("Infrustructure")));
 
+            builder.Services.AddControllers();
+
+            builder.Services.AddApplicationServices();
+
+            builder.Services.AddSwagerService();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json/", "KSINET API v1"));
+            //}
+
+            app.UseSwaggerService();
+
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 

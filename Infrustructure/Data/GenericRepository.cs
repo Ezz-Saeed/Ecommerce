@@ -36,6 +36,12 @@ namespace Infrustructure.Data
         public async Task<T> GetEntityWithSpec(ISpecification<T> specification)
         {
            return await ApplySecification(specification).FirstOrDefaultAsync();
+
+        }
+
+        public Task<int> CountAsync(ISpecification<T> specification)
+        {
+            return ApplySecification(specification).CountAsync();
         }
 
 
@@ -43,5 +49,7 @@ namespace Infrustructure.Data
         {
             return  SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), specification);
         }
+
+        
     }
 }

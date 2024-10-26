@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="row">
+    <section class="filter col-3">
+      <h5 class="text-warning">Sort</h5>
+      <select class="mb-3" value="" (change)="onSortChange($event)">
+        <option *ngFor="let s of sortOptions" [value]="s.value">{{s.name}}</option>
+      </select>
+
+      <h5 class="text-warning">Brand</h5>
+      <ul class="list-group my-3">
+        <li class="list-group-item" *ngFor="let b of brands"
+            [class.active]="b.id === shopParams.selectedBrandId"
+            [value]="b.id"
+            (click)="onselectedBrandIdChanges(b.id)">
+          {{b.name}}
+        </li>
+      </ul>
+
+      <h5 class="text-warning">Type</h5>
+      <ul class="list-group my-3">
+        <li class="list-group-item" *ngFor="let t of types"
+            [class.active]="t.id === shopParams.selectedTypeID"
+            [value]="t.id"
+            (click)="onselectedTypeIdChanges(t.id)">
+          {{t.name}}
+        </li>
+      </ul>
+    </section>
+
+    <section class="col-9 offset-3"> <!-- Add offset-3 to prevent overlap with the fixed filter -->
+      <div class="d-flex justify-content-between align-items-center pb-2">
+
+        <app-paging-header
+        [totalCount]="totalCount"
+        [pageNumber]="shopParams.pageNumber"
+        [pageSize]="shopParams.pageSize"></app-paging-header>
+
+        <div action="" class="form-inline mt-2">
+          <input #search type="text" (keyup.enter)="onSearch()"
+          class="d-inline mx-2 form-control" style="width: 300px;" placeholder="Search">
+          <button (click)="onSearch()" class="btn btn-outline-primary my-2">Search</button>
+          <button (click)="onReset()" class="btn btn-outline-success my-2 mx-2">Reset</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let p of products">
+          <app-product-item [product]="p"></app-product-item>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center align-items-center" *ngIf="totalCount>0">
+
+        <app-pager
+        [totalCount]="totalCount"
+        [numberOfPages]="numberOfPages"
+        [pagesArray]="pagesArray"
+        (pageChanged)="onPageChanges($event)"
+        (previousChanged)="onPageChanges($event)"
+        (nextChanged)="onPageChanges($event)"
+        ></app-pager>
+
+      </div>
+    </section>
+  </div>
+</div>

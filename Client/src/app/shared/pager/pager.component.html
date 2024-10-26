@@ -1,0 +1,13 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination" *ngIf="numberOfPages>=1">
+    <li class="page-item" [class.disabled]="pageNumber<=1"><a class="page-link" (click)="onPreviousPage()"
+      *ngIf="numberOfPages>1" >Previous</a></li>
+    <li class="page-item"
+        *ngFor="let p of pagesArray; let i = index"
+        (click)="onPagerChanges(i + 1)" [class.active]="i+1===pageNumber">
+      <a class="page-link">{{i + 1}}</a>
+    </li>
+    <li class="page-item" (click)="onNextPage()"
+    *ngIf="numberOfPages>1" [class.disabled]="pageNumber===numberOfPages"><a class="page-link">Next</a></li>
+  </ul>
+</nav>

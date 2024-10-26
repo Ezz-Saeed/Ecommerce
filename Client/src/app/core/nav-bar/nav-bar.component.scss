@@ -1,5 +1,11 @@
 
-.cart-no{
+
+.nav-bar{
+  background-color: #f8f9fa;
+}
+
+.cart::before{
+  content: '5';
   position: absolute;
   min-width: 25px;
   min-height: 25px;

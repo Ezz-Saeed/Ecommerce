@@ -6,15 +6,16 @@ import { ShopComponent } from './shop.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 
 export const routes: Routes = [
-  
+  {path:'', component:ShopComponent},
+  {path:':id', component:ProductDetailsComponent},
 ];
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    // RouterModule.forRoot(routes)
+    RouterModule.forChild(routes)
   ],
-  // exports:[RouterModule],
+  exports:[RouterModule],
 })
 export class ShopRoutingModule { }

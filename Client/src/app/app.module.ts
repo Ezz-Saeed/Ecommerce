@@ -24,10 +24,9 @@ import { routes } from './shop/shop-routing.module';
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule,
-    ShopModule,
     FontAwesomeModule,
     HomeModule,
-    
+
   ],
   providers:[provideRouter(routes)]
   ,

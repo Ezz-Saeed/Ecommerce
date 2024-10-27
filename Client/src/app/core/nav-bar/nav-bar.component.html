@@ -1,11 +1,12 @@
 <div class="nav-bar d-flex flex-column flex-md-row align-items-center justify-content-between
 pb-3 mb-4 border-bottom fixed-top">
-  <img src="images/logo.png" style="max-height: 70px;" alt="logo" routerLink="/">
+  <img class="logo" src="images/logo.png" style="max-height: 70px;" alt="logo" routerLink="/">
   <nav class=" d-inline-flex mt-2 mt-md-0 ms-md-auto text-uppercase"
   style="font-size: larger;">
-    <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="/">home</a>
-    <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="shop">shop</a>
-    <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">contact</a>
+    <a class="me-3 py-2 link-body-emphasis" routerLink="/" routerLinkActive="active"
+    [routerLinkActiveOptions]="{exact:true}">home</a>
+    <a class="me-3 py-2 link-body-emphasis" routerLink="shop" routerLinkActive="active">shop</a>
+    <a class="me-3 py-2 link-body-emphasis" routerLinkActive="active">contact</a>
   </nav>
   <div class="d-flex align-items-center justify-content-between">
     <div class="cart posiotion-relative">

@@ -1,0 +1,17 @@
+
+i{
+  cursor: pointer;
+  font-size: 2em;
+  margin: 8px;
+}
+
+.buy{
+  color: rgb(240, 213, 55);
+
+}
+
+.buy:focus, .buy:hover{
+  background-color: rgb(240, 213, 55);
+  color: white;
+  transition: .5s;
+}

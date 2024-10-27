@@ -1,1 +1,25 @@
-<p>product-details works!</p>
+<div *ngIf="product">
+  <div class="row">
+    <div class="col-6">
+      <img src="{{product.pictureUrl}}" alt="{{product.name}}" class="img-fluid w-100">
+    </div>
+    <div class="col-6">
+      <h3>{{product.name}}</h3>
+      <p>{{product.price | currency}}</p>
+      <div class="">
+        <i class="fa fa-minus-circle text-warning"></i>
+        <span class="font-weight-bold fs-1">2</span>
+        <i class="fa fa-plus-circle text-warning"></i>
+        <div class="my-10">
+          <button class="buy btn btn-outline-secondary btn-lg">Add to cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <h5>Description</h5>
+    <div class="c0l-12 mx-4">
+      <p>{{product.description}}</p>
+    </div>
+  </div>
+</div>

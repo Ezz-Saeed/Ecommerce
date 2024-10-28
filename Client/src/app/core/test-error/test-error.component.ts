@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TestErrorComponent {
   baseUrl:string=Environment.baseUrl;
+  validationErrors:any;
   constructor(private http:HttpClient){}
 
   get404Error(){
@@ -50,7 +51,9 @@ export class TestErrorComponent {
         console.log(err)
       },
       error: err=>{
-        console.log(err)
+        console.log(err.errors)
+        this.validationErrors = err.errors;
+        console.log(this.validationErrors)
       }
     })
   }

@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row">
     <section class="filter col-3">
+      <ng-container *ngIf="brands && types">
       <h5 class="text-warning">Sort</h5>
       <select class="mb-3" value="" (change)="onSortChange($event)">
         <option *ngFor="let s of sortOptions" [value]="s.value">{{s.name}}</option>
@@ -25,6 +26,7 @@
           {{t.name}}
         </li>
       </ul>
+    </ng-container>
     </section>
 
     <section class="col-9"> <!-- Add offset-3 to prevent overlap with the fixed filter -->
@@ -35,7 +37,7 @@
         [pageNumber]="shopParams.pageNumber"
         [pageSize]="shopParams.pageSize"></app-paging-header>
 
-        <div action="" class="form-inline mt-2">
+        <div action="" class="form-inline mt-2" *ngIf="products">
           <input #search type="text" (keyup.enter)="onSearch()"
           class="d-inline mx-2 form-control" style="width: 300px;" placeholder="Search">
           <button (click)="onSearch()" class="btn btn-outline-primary my-2">Search</button>

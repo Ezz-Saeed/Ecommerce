@@ -14,8 +14,9 @@ export class ProductDetailsComponent implements OnInit {
   productId!:number;
   constructor
   (private shopService:ShopService, private activatedRoute:ActivatedRoute,
-   private breadCrumbService:BreadcrumbService
-  ){}
+   private breadCrumbService:BreadcrumbService){
+    this.breadCrumbService.set('@productDetails',"  ");
+  }
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(paramMap=>{
       this.productId = Number(paramMap.get('id'));

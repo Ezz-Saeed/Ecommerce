@@ -8,9 +8,11 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HomeModule } from './home/home.module';
-import { provideRouter, RouterModule } from '@angular/router';
+import { provideRouter,  } from '@angular/router';
 import { routes } from './shop/shop-routing.module';
 import { ErrorInterceptor } from './core/Interceptors/error.interceptor';
+import {NgxSpinnerModule} from 'ngx-spinner'
+import { LoadingInterceptor } from './core/Interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -25,9 +27,12 @@ import { ErrorInterceptor } from './core/Interceptors/error.interceptor';
     CoreModule,
     FontAwesomeModule,
     HomeModule,
+    NgxSpinnerModule
 
   ],
-  providers:[provideRouter(routes), {provide:HTTP_INTERCEPTORS,useClass:ErrorInterceptor,multi:true}]
+  providers:[provideRouter(routes), {provide:HTTP_INTERCEPTORS,useClass:ErrorInterceptor,multi:true},
+    {provide:HTTP_INTERCEPTORS, useClass:LoadingInterceptor, multi:true}
+  ]
   ,
   bootstrap: [AppComponent]
 })

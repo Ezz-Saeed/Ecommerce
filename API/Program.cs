@@ -8,6 +8,7 @@ using Infrustructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -31,9 +32,11 @@ namespace API
             builder.Services.AddDbContext<StoreContext>
                 (context => context.UseSqlServer(connection, c=>c.MigrationsAssembly("Infrustructure")));
 
+            
+
             builder.Services.AddControllers();
 
-            builder.Services.AddApplicationServices();
+            builder.Services.AddApplicationServices(builder.Configuration);
 
             builder.Services.AddSwagerService();
 

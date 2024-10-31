@@ -13,6 +13,9 @@ const routes: Routes = [
   {path:'shop', loadChildren:()=>import('./shop/shop.module').then(module=>module.ShopModule),
     data:{breadcrumb:'Shop'}
   },
+  {path:'basket', loadChildren:()=>import('./basket/basket.module').then(module=>module.BasketModule),
+    data:{breadCrumb:'Basket'}
+  },
   // {path:'shop/:id', component:ProductDetailsComponent},
   {path:'**', redirectTo:'not-found', pathMatch:'full',  data:{breadcrumb:'Not Found'}},
 ];

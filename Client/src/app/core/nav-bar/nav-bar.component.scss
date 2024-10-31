@@ -4,8 +4,7 @@
   background-color: #f8f9fa;
 }
 
-.cart::before{
-  content: '5';
+.cart-no{
   position: absolute;
   min-width: 25px;
   min-height: 25px;
@@ -16,8 +15,7 @@
   color: white;
   top: 5px;
   right: 219px;
-  // top: -12px;
-  // right: 32px;
+
 }
 
 a{

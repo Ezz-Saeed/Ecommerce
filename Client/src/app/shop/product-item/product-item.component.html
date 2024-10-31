@@ -1,14 +1,14 @@
 
   <div class="card mb-4  box-shadow">
     <img class="img-fluid bg-info" src="{{product.pictureUrl}}" alt="{{product.name}}">
-    
+
     <div class="card-body d-flex flex-column">
       <a [routerLink]="['/shop', product.id]" class="text-decoration-none text-uppercase">
         <h6 >{{product.name}}</h6>
       </a>
       <span class="mb-4">{{product.price | currency}}</span>
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-outline-secondary  mx-1">
+          <button (click)="addItemToBasket()" type="button" class="btn btn-sm btn-outline-secondary  mx-1">
             <i class="fa fa-shopping-cart fa-2x text-dark mx-3"></i>
           </button>
           <button [routerLink]="['/shop',product.id]" type="button" class="mx-1 btn btn-sm btn-outline-secondary">View</button>

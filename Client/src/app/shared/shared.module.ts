@@ -12,7 +12,7 @@ import { PagingHeaderComponent } from './paging-header/paging-header.component';
   ],
   imports: [
     CommonModule,
-
+    
   ],
   exports:[
   PagingHeaderComponent,

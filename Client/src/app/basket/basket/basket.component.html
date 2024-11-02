@@ -4,8 +4,70 @@
     <p>There are no items in your basket</p>
   </div>
   <div *ngIf="basket$ | async as basket">
-    <ul>
-      <li *ngFor="let item of basket.basketItems">{{item.productName}} - {{item.quantity}}</li>
-    </ul>
+    <div class="container mt-5 d-flex justify-content-center">
+      <div class="row ">
+        <div class="col-12 py-2">
+          <div class="responsive-table">
+            <div class="table">
+              <thead>
+                <tr>
+                  <th class="bg-light text-uppercase border-0 p-2" scope="col">
+                    <div class="p-2">product</div>
+                  </th>
+                  <th class="bg-light text-uppercase border-0 p-2" scope="col">
+                    <div class=" p-3">price</div>
+                  </th>
+                  <th class="bg-light text-uppercase border-0 p-2" scope="col">
+                    <div class="p-3">quantity</div>
+                  </th>
+                  <th class="bg-light text-uppercase border-0 p-2" scope="col">
+                    <div class="p-3">tottal</div>
+                  </th>
+                  <th class="bg-light text-uppercase border-0 p-2" scope="col">
+                    <div class="p-3">remove</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of basket.basketItems">
+                    <th scope="row">
+                      <div class="px-2">
+                        <img class="img-fluid" [src]="item.pictureUrl" alt="{{item.productName}}">
+                        <div class="d-inline-block align-middle mx-3">
+                          <h5>
+                            <a class="text-dark text-decoration-none" routerLink="/shop/{{item.id}}">{{item.productName}}</a>
+                          </h5>
+                          <span class="text-muted font-italic font-weight-normal" style="font-style: italic;">
+                            Type: {{item.type}}
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="text-center align-middle"><strong>{{item.price | currency}}</strong></td>
+                    <td class="text-center align-middle quantity">
+                      <i (click)="decrementItemQuantity(item)" class="fa fa-minus-circle "></i>
+                      <span class="px-2 py-2" style="font-size: larger;"><strong>{{item.quantity}}</strong></span>
+                      <i (click)="incrementItemQuantity(item)" class="fa fa-plus-circle"></i>
+                    </td>
+                    <td class="text-center align-middle"><strong>{{item.quantity*item.price | currency}}</strong></td>
+                    <td (click)="removeItemFromBAsket(item)" class="text-center align-middle text-danger"
+                      style="font-size: 30px;cursor: pointer;">
+                      <i class="fa fa-trash"></i></td>
+                </tr>
+              </tbody>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 offset-6">
+        <app-order-totals></app-order-totals>
+        <a style="width: 100%;" routerLink="/checkout" class="btn mb-5 btn-outline-secondary py-2 ">
+          Proceed to checkout
+        </a>
+      </div>
+    </div>
+
   </div>
 </div>

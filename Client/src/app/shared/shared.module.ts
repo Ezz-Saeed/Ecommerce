@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { PagerComponent } from './pager/pager.component';
 import { PagingHeaderComponent } from './paging-header/paging-header.component';
+import { OrderTotalsComponent } from './order-totals/order-totals.component';
 
 
 
@@ -9,14 +10,19 @@ import { PagingHeaderComponent } from './paging-header/paging-header.component';
   declarations: [
     PagerComponent,
     PagingHeaderComponent,
+    OrderTotalsComponent,
+
   ],
   imports: [
     CommonModule,
-    
+
+
   ],
   exports:[
-  PagingHeaderComponent,
-  PagerComponent
+    PagingHeaderComponent,
+    PagerComponent,
+    OrderTotalsComponent,
+
   ]
 })
 export class SharedModule { }

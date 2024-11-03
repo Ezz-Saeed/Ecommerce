@@ -3,9 +3,11 @@ using API.Errors;
 using API.Extensions;
 using API.Helpers;
 using API.MiddleWares;
+using Core.Enitities.IdentityEntities;
 using Core.Interfaces;
 using Infrustructure.Data;
 using Infrustructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -35,12 +37,14 @@ namespace API
 
             builder.Services.AddDbContext<AppIdentityDbContext>(context =>
             {
-                context.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+                context.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"),
+                    c=>c.MigrationsAssembly("Infrustructure"));
             });
 
             builder.Services.AddControllers();
 
             builder.Services.AddApplicationServices(builder.Configuration);
+            builder.Services.AddIdentityServices();
 
             builder.Services.AddSwagerService();
 
@@ -77,6 +81,11 @@ namespace API
                 var context = services.GetRequiredService<StoreContext>();
                 await context.Database.MigrateAsync();
                 await StoreContextSeed.SeedAsync(context, iLoggerFactory);
+
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                var identityDbContext = services.GetRequiredService<AppIdentityDbContext>();
+                await identityDbContext.Database.MigrateAsync();
+                await AppIdentityDbContextSeed.SeedUsersAsync(userManager);
             }
             catch (Exception ex)
             {

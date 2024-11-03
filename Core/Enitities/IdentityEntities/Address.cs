@@ -1,4 +1,6 @@
-﻿namespace Core.Enitities.IdentityEntities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Core.Enitities.IdentityEntities
 {
     public class Address
     {
@@ -9,5 +11,8 @@
         public string City { get; set; }
         public string State { get; set; }
         public string ZipCode { get; set; }
+        //[ForeignKey(nameof(UserId))]
+        //public string UserId { get; set; }
+        //public AppUser AppUser { get; set; }
     }
 }

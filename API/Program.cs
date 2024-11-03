@@ -5,6 +5,7 @@ using API.Helpers;
 using API.MiddleWares;
 using Core.Interfaces;
 using Infrustructure.Data;
+using Infrustructure.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -32,7 +33,10 @@ namespace API
             builder.Services.AddDbContext<StoreContext>
                 (context => context.UseSqlServer(connection, c=>c.MigrationsAssembly("Infrustructure")));
 
-            
+            builder.Services.AddDbContext<AppIdentityDbContext>(context =>
+            {
+                context.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
 
             builder.Services.AddControllers();
 

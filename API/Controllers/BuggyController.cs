@@ -1,5 +1,6 @@
 ﻿using API.Errors;
 using Infrustructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,13 @@ namespace API.Controllers
             return Ok(data);
         }
 
-      
+
+        [HttpGet("testAuth")]
+        [Authorize]
+        public ActionResult<string> Test()
+        {
+            return "tests";
+        }
 
         [HttpGet("servererror")]
         public ActionResult GetServerError()

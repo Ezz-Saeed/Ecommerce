@@ -2,8 +2,10 @@
 using API.Errors;
 using Core.Enitities.IdentityEntities;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -19,6 +21,23 @@ namespace API.Controllers
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.tokenService = tokenService;
+        }
+
+
+        [Authorize]
+        [HttpGet]
+
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var email = HttpContext.User?.Claims?.FirstOrDefault(c=>c.Type== ClaimTypes.Email)?.Value;
+            var user = await userManager.FindByEmailAsync(email);
+            return new UserDto
+            {
+                Email = user.Email!,
+                DisplayName = user.DisplayName,
+                Token = tokenService.CreateToken(user)
+            };
+
         }
 
         [HttpPost("login")]

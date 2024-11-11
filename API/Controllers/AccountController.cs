@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.Errors;
 using API.Extensions;
+using AutoMapper;
 using Core.Enitities.IdentityEntities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +17,15 @@ namespace API.Controllers
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
         private readonly ITokenService tokenService;
+        private readonly IMapper mapper;
 
         public AccountController( UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            ITokenService tokenService)
+            ITokenService tokenService, IMapper mapper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.tokenService = tokenService;
+            this.mapper = mapper;
         }
 
 
@@ -51,10 +54,10 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet("getAddress")]
-        public async Task<ActionResult<Address>> GetAddress()
+        public async Task<ActionResult<AddressDto>> GetAddress()
         {          
             var user = await userManager.GetUSerWithAddress(User);
-            return user.Address;
+            return mapper.Map<Address, AddressDto>(user.Address!);
         }
 
 

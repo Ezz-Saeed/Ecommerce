@@ -60,7 +60,21 @@ namespace API.Controllers
             return mapper.Map<Address, AddressDto>(user.Address!);
         }
 
+        [Authorize]
+        [HttpPut("updateAddress")]
+        public async Task<ActionResult<AddressDto>> UpdateAddress(AddressDto addressDto)
+        {
+            var user = await userManager.GetUSerWithAddress(User);
+            user.Address = mapper.Map<AddressDto, Address>(addressDto);
+            var result = await userManager.UpdateAsync(user);
 
+            if (!result.Succeeded)
+            {
+                return BadRequest("Couldn't update user!");
+            }
+
+            return Ok(mapper.Map<Address,AddressDto>(user.Address!));
+        }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)

@@ -52,9 +52,8 @@ namespace API.Controllers
         [Authorize]
         [HttpGet("getAddress")]
         public async Task<ActionResult<Address>> GetAddress()
-        {
-            var email = User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.Email)?.Value;
-            var user = await userManager.Users.Include(u=>u.Address).SingleOrDefaultAsync(u => u.Email == email);
+        {          
+            var user = await userManager.GetUSerWithAddress(User);
             return user.Address;
         }
 

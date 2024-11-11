@@ -14,5 +14,14 @@ namespace API.Extensions
 
             return await userManager.Users.SingleOrDefaultAsync(u => u.Email == email);
         }
+
+
+        public static async Task<AppUser> GetUSerWithAddress(this UserManager<AppUser> userManager
+            ,ClaimsPrincipal claimsPrincipal)
+        {
+            var email = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            return await userManager.Users.Include(u=>u.Address).SingleOrDefaultAsync(u => u.Email == email);
+        }
     }
 }

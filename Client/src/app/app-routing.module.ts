@@ -4,6 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { TestErrorComponent } from './core/test-error/test-error.component';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
 import { NotFountComponent } from './core/not-fount/not-fount.component';
+import { skip } from 'rxjs';
 
 const routes: Routes = [
   {path:'', component:HomeComponent, data:{breadcrumb:'Home'}},
@@ -16,6 +17,8 @@ const routes: Routes = [
   {path:'basket', loadChildren:()=>import('./basket/basket.module').then(module=>module.BasketModule),
     data:{breadCrumb:'Basket'}
   },
+  {path:'account',loadChildren:()=>import('./account/account.module').
+    then(module=>module.AccountModule),data:{breadcrumbs:{skip:true}}},
   {path:'checkout',loadChildren:()=>import('./checkout/checkout.module').then(module=>module.CheckoutModule)},
   // {path:'shop/:id', component:ProductDetailsComponent},
   {path:'**', redirectTo:'not-found', pathMatch:'full',  data:{breadcrumb:'Not Found'}},

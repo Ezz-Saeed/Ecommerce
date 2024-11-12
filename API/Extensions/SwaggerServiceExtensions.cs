@@ -4,14 +4,40 @@ namespace API.Extensions
 {
     public static class SwaggerServiceExtensions
     {
-        public static IServiceCollection AddSwagerService(this IServiceCollection Services)
+        public static IServiceCollection AddSwagerService(this IServiceCollection services)
         {
-           Services.AddSwaggerGen(c =>
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KSINET API", Version = "v1" });
+                var securitySchema = new OpenApiSecurityScheme
+                {
+                    Description = "JWT Auth Bearer Scheme",
+                    Name = "Authorisation",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                };
+
+                c.AddSecurityDefinition("Bearer", securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement
+                {
+                    {
+                        securitySchema, new[] {"Bearer"}
+                    }
+                };
+
+                c.AddSecurityRequirement(securityRequirement);
+
             });
 
-            return Services;
+            return services;
         }
 
 

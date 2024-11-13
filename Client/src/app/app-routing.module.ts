@@ -19,7 +19,8 @@ const routes: Routes = [
   },
   {path:'account',loadChildren:()=>import('./account/account.module').
     then(module=>module.AccountModule),data:{breadcrumbs:{skip:true}}},
-  {path:'checkout',loadChildren:()=>import('./checkout/checkout.module').then(module=>module.CheckoutModule)},
+  {path:'checkout',loadChildren:()=>import('./checkout/checkout.module').
+    then(module=>module.CheckoutModule)},
   // {path:'shop/:id', component:ProductDetailsComponent},
   {path:'**', redirectTo:'not-found', pathMatch:'full',  data:{breadcrumb:'Not Found'}},
 ];

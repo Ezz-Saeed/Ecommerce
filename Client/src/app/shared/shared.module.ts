@@ -3,6 +3,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { PagerComponent } from './pager/pager.component';
 import { PagingHeaderComponent } from './paging-header/paging-header.component';
 import { OrderTotalsComponent } from './order-totals/order-totals.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -15,13 +16,14 @@ import { OrderTotalsComponent } from './order-totals/order-totals.component';
   ],
   imports: [
     CommonModule,
-
+    ReactiveFormsModule
 
   ],
   exports:[
     PagingHeaderComponent,
     PagerComponent,
     OrderTotalsComponent,
+    ReactiveFormsModule
 
   ]
 })

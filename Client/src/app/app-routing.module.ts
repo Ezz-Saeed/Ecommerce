@@ -18,7 +18,7 @@ const routes: Routes = [
     data:{breadCrumb:'Basket'}
   },
   {path:'account',loadChildren:()=>import('./account/account.module').
-    then(module=>module.AccountModule),data:{breadcrumbs:{skip:true}}},
+    then(module=>module.AccountModule),data:{breadcrumb:{skip:true}}},
   {path:'checkout',loadChildren:()=>import('./checkout/checkout.module').
     then(module=>module.CheckoutModule)},
   // {path:'shop/:id', component:ProductDetailsComponent},

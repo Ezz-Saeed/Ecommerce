@@ -14,7 +14,30 @@ pb-3 mb-4 border-bottom fixed-top">
 
     <div *ngIf="basket$ | async as basket" class="cart-no">{{basket.basketItems.length}}</div>
     </a>
-    <a routerLink="/account/login" class="btn btn-outline-secondary mx-3">Sign in</a>
-    <a routerLink="account/register" class="btn btn-outline-secondary mx-3">Sign up</a>
+
+    <ng-container *ngIf="(currentUser$ | async)===null as currentUser">
+      <a routerLink="/account/login" class="btn btn-outline-secondary mx-3">Sign in</a>
+      <a routerLink="account/register" class="btn btn-outline-secondary mx-3">Sign up</a>
+    </ng-container>
+
+    <ng-container *ngIf="(currentUser$ | async) as currentUser">
+      <!-- <div class="dropdown">
+        <a class="dropdown-toggle mx-3" data-toggle="dropdown" >
+         <strong><a href="#" class="">Welcome {{currentUser.displayName}}</a></strong>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" *dropdownMenue>
+          <a class="dropdown-item">
+            <i class="fa fa-shopping-cart">View Cart</i>
+          </a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div> -->
+      <div class="d-flex justify-content-between mx-3">
+        <strong><a>Welcome {{currentUser.displayName}}</a></strong>
+        <a style="cursor: pointer;" (click)="logOut()" class="mx-3">Logout</a>
+      </div>
+    </ng-container>
+
   </div>
 </div>

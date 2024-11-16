@@ -5,12 +5,36 @@
       <div data-mdb-input-init class="form-outline mb-4">
         <input formControlName="email" type="email" id="form2Example1" class="form-control" />
         <label>Email address</label>
+        <ul>
+          <li class="text-danger" *ngIf="loginForm.get('email')?.invalid&&
+          loginForm.get('email')?.touched&&
+          loginForm.get('email')?.errors!['required']">
+          Email is required
+        </li>
+        <li class="text-danger" *ngIf="loginForm.get('email')?.invalid&&
+          loginForm.get('email')?.touched&&
+          loginForm.get('email')?.errors!['pattern']">
+          Invalid email
+        </li>
+        </ul>
       </div>
 
       <!-- Password input -->
       <div data-mdb-input-init class="form-outline mb-4">
         <input formControlName="password" type="password" id="form2Example2" class="form-control" />
         <label >Password</label>
+        <ul>
+          <li class="text-danger" *ngIf="loginForm.get('password')?.invalid&&
+          loginForm.get('password')?.touched&&
+          loginForm.get('password')?.errors!['required']">
+          Email is required
+        </li>
+        <li class="text-danger" *ngIf="loginForm.get('password')?.invalid&&
+          loginForm.get('password')?.touched&&
+          loginForm.get('password')?.errors!['pattern']">
+          Invalid email
+        </li>
+        </ul>
       </div>
 
       <!-- 2 column grid layout for inline styling -->
@@ -21,5 +45,12 @@
           class="btn btn-primary btn-block mb-4">Sign in</button>
         </div>
     </form>
+    <div class="col-8">
+      <p>Form status: {{loginForm.status}}</p>
+      <p>Email status: {{loginForm.get('email')?.status}}</p>
+      <p>Email touched: {{loginForm.get('email')?.touched}}</p>
+      <p>Email dirty: {{loginForm.get('email')?.dirty}}</p>
+      <pre>{{loginForm.value | json}}</pre>
+    </div>
   </div>
 </div>

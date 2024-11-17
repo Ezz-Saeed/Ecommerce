@@ -5,6 +5,7 @@ import { TestErrorComponent } from './core/test-error/test-error.component';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
 import { NotFountComponent } from './core/not-fount/not-fount.component';
 import { skip } from 'rxjs';
+import { authGuard } from './core/Guards/auth.guard';
 
 const routes: Routes = [
   {path:'', component:HomeComponent, data:{breadcrumb:'Home'}},
@@ -20,7 +21,7 @@ const routes: Routes = [
   {path:'account',loadChildren:()=>import('./account/account.module').
     then(module=>module.AccountModule),data:{breadcrumb:{skip:true}}},
   {path:'checkout',loadChildren:()=>import('./checkout/checkout.module').
-    then(module=>module.CheckoutModule)},
+    then(module=>module.CheckoutModule),canActivate:[authGuard]},
   // {path:'shop/:id', component:ProductDetailsComponent},
   {path:'**', redirectTo:'not-found', pathMatch:'full',  data:{breadcrumb:'Not Found'}},
 ];

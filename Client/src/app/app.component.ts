@@ -11,6 +11,7 @@ import { AccountService } from './account/account.service';
 })
 export class AppComponent implements OnInit {
   title = 'Skinet';
+  token = localStorage.getItem('token')
   constructor(private basketService:BasketService, private accountService:AccountService){}
 
   ngOnInit(): void {
@@ -19,9 +20,9 @@ export class AppComponent implements OnInit {
   }
 
   loadCurrnetUser(){
-    const token = localStorage.getItem('token')
-    if(token){
-      this.accountService.loadCurrentUser(token).subscribe({
+
+
+      this.accountService.loadCurrentUser(this.token).subscribe({
         next:response=>{
           console.log('Loaded user')
         },
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit {
           console.log(err)
         }
       })
-    }
+
   }
 
   lodaBasket(){

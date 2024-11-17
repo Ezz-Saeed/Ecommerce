@@ -1,1 +1,67 @@
-<p>register works!</p>
+<div class=" d-flex justify-content-center">
+  <div class="col-3">
+    <form class="mt-5" [formGroup]="registerForm" (ngSubmit)="onSbmit()">
+      <!-- Email input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input formControlName="email" type="email" id="form2Example1" class="form-control" />
+        <label>Email address</label>
+        <ul>
+          <li class="text-danger" *ngIf="registerForm.get('email')?.invalid&&
+          registerForm.get('email')?.touched&&
+          registerForm.get('email')?.errors!['required']">
+          Email is required
+        </li>
+        <li class="text-danger" *ngIf="registerForm.get('email')?.invalid&&
+          registerForm.get('email')?.touched&&
+          registerForm.get('email')?.errors!['pattern']">
+          Invalid email
+        </li>
+        </ul>
+      </div>
+
+      <!-- Password input -->
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input formControlName="password" type="password" id="form2Example2" class="form-control" />
+        <label >Password</label>
+        <ul>
+          <li class="text-danger" *ngIf="registerForm.get('password')?.invalid&&
+          registerForm.get('password')?.touched&&
+          registerForm.get('password')?.errors!['required']">
+          Password is required
+        </li>
+        <li class="text-danger" *ngIf="registerForm.get('password')?.invalid&&
+          registerForm.get('password')?.touched&&
+          registerForm.get('password')?.errors!['pattern']">
+          Invalid email
+        </li>
+        </ul>
+      </div>
+
+      <div data-mdb-input-init class="form-outline mb-4">
+        <input formControlName="displayName" type="text" id="form2Example2" class="form-control" />
+        <label >Display Name</label>
+        <ul class="text-danger" >
+          <li class="text-danger" *ngIf="registerForm.get('displayName')?.invalid&&
+          registerForm.get('displayName')?.touched&&
+          registerForm.get('displayName')?.errors!['required']">
+          Display Name is required
+        </li>
+        <li class="text-danger" *ngIf="registerForm.get('displayName')?.invalid&&
+          registerForm.get('displayName')?.touched&&
+          registerForm.get('displayName')?.errors!['pattern']">
+          Invalid displayName
+        </li>
+        <li *ngIf="registerForm.get('emai')?.errors?.['emailExists']">Email address is in use</li>
+        </ul>
+      </div>
+
+      <!-- 2 column grid layout for inline styling -->
+
+        <div class="col d-flex justify-content-center">
+          <!-- Submit button -->
+          <button [disabled]="registerForm.invalid"  type="submit" data-mdb-button-init data-mdb-ripple-init
+          class="btn btn-primary btn-block mb-4">Register</button>
+        </div>
+    </form>
+  </div>
+</div>

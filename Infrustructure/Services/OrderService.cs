@@ -1,5 +1,7 @@
-﻿using Core.Enitities.OrderAggregate;
+﻿using Core.Enitities;
+using Core.Enitities.OrderAggregate;
 using Core.Interfaces;
+using Infrustructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +10,38 @@ using System.Threading.Tasks;
 
 namespace Infrustructure.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService(IGenericRepository<Order> orderRepo, IGenericRepository<Product> productRepo,
+        IGenericRepository<DeliveryMethod> dMethodRepo, IBasketRepository basketRepo) : IOrderService
     {
-        public Task<Order> CreateOrderAsync(string buerEmail, int deliveryMethod, string basketId, Address address)
+        
+        public async Task<Order> CreateOrderAsync(string buerEmail, int deliveryMethodId, string basketId, Address address)
         {
-            throw new NotImplementedException();
+            //get basket
+            var basket = await basketRepo.GetBasketAsync(basketId);
+
+            var items = new List<OrderItem>();
+
+            foreach (var item in basket.BasketItems)
+            {
+                //get product from db
+                var productItem = await productRepo.FindAsync(item.Id);
+                var productItemOrdered = new ProductItemOrdered(productItem.Id,productItem.Name,productItem.PictureUrl);
+                //create order item
+                var orderItem = new OrderItem(productItemOrdered, productItem.Price, item.Quantity);
+                items.Add(orderItem);
+            }
+
+            //get delivery method from db
+            var deliveryMethod = await dMethodRepo.FindAsync(deliveryMethodId);
+            //calc subtotal
+            var subTotal = items.Sum(i => i.Price * i.Quantity);
+            //create order
+            var order = new Order(items, buerEmail, address, deliveryMethod, subTotal);
+
+            //save order to db
+            ///////////////////////
+
+            return order;
         }
 
         public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()

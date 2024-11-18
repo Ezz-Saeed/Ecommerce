@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrustructure.Services
 {
-    public class OrderService(IGenericRepository<Order> orderRepo, IGenericRepository<Product> productRepo,
-        IGenericRepository<DeliveryMethod> dMethodRepo, IBasketRepository basketRepo) : IOrderService
+    public class OrderService(IUntiOfWork untiOfWork, IBasketRepository basketRepo) : IOrderService
     {
         
         public async Task<Order> CreateOrderAsync(string buerEmail, int deliveryMethodId, string basketId, Address address)
@@ -24,7 +23,7 @@ namespace Infrustructure.Services
             foreach (var item in basket.BasketItems)
             {
                 //get product from db
-                var productItem = await productRepo.FindAsync(item.Id);
+                var productItem = await untiOfWork.Repository<Product>().FindAsync(item.Id);
                 var productItemOrdered = new ProductItemOrdered(productItem.Id,productItem.Name,productItem.PictureUrl);
                 //create order item
                 var orderItem = new OrderItem(productItemOrdered, productItem.Price, item.Quantity);
@@ -32,14 +31,21 @@ namespace Infrustructure.Services
             }
 
             //get delivery method from db
-            var deliveryMethod = await dMethodRepo.FindAsync(deliveryMethodId);
+            var deliveryMethod = await untiOfWork.Repository<DeliveryMethod>().FindAsync(deliveryMethodId);
             //calc subtotal
             var subTotal = items.Sum(i => i.Price * i.Quantity);
             //create order
             var order = new Order(items, buerEmail, address, deliveryMethod, subTotal);
+            untiOfWork.Repository<Order>().Add(order);
 
             //save order to db
-            ///////////////////////
+            var result = await untiOfWork.Complete();
+
+            //delete basket when success
+            if (result <= 0)
+                return null;
+
+            await basketRepo.DeleteBasketAsync(basketId);
 
             return order;
         }

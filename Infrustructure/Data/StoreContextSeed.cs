@@ -1,4 +1,5 @@
 ﻿using Core.Enitities;
+using Core.Enitities.OrderAggregate;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,19 @@ namespace Infrustructure.Data
                     foreach (var item in products)
                     {
                         context.Products.Add(item);
+                    }
+
+                    await context.SaveChangesAsync();
+                }
+
+                if (!context.DeliveryMethods.Any())
+                {
+                    var deliveryMethodsData = File.ReadAllText("../Infrustructure/Data/SeedData/delivery.json");
+                    var DeliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryMethodsData);
+
+                    foreach (var item in DeliveryMethods)
+                    {
+                        context.DeliveryMethods.Add(item);
                     }
 
                     await context.SaveChangesAsync();

@@ -1,11 +1,8 @@
 ﻿using Core.Enitities;
+using Core.Enitities.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using StackExchange.Redis;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrustructure.Data
 {
@@ -19,6 +16,9 @@ namespace Infrustructure.Data
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<ProductBrand> ProductBrands { get; set; }
+        public virtual DbSet<Core.Enitities.OrderAggregate.Order> Orders { get; set; }
+        public virtual DbSet<OrderItem> Items { get; set; }
+        public virtual DbSet<DeliveryMethod> DeliveryMethods { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

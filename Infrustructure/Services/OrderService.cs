@@ -40,7 +40,15 @@ namespace Infrustructure.Services
             untiOfWork.Repository<Order>().Add(order);
 
             //save order to db
-            var result = await untiOfWork.Complete();
+            int result = 0;
+            try
+            {
+                 result = await untiOfWork.Complete();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
 
             //delete basket when success
             if (result <= 0)

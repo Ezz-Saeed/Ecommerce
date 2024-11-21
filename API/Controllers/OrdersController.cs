@@ -35,13 +35,14 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>>GetOrderWithId(int id)
+        public async Task<ActionResult<OrderToReturnDto>>GetOrderWithId(int id)
         {
             var email = User.GetEmailFromPrincipal();
             var order = await orderService.GetOrderByIdAsync(id,email);
             if (order is null)
                 return BadRequest(new ApiResponseError(404, "Coouldn't find order for user"));
-            return order;
+            var orderDto = mapper.Map<Order, OrderToReturnDto>(order);
+            return orderDto;
         }
 
         [HttpGet("getDeliveryMethods")]

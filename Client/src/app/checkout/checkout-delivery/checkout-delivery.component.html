@@ -1,0 +1,28 @@
+<div class="mt-4" [formGroup]="checkoutForm">
+  <div class="row gap-1" formGroupName="deliveryForm">
+    <div style="width: 50%;" class="col-6  form-control" *ngFor="let m of deliveryMethods">
+      <input
+        type="radio"
+        id="{{ m.id }}"
+        value="{{ m.id }}"
+        formControlName="deliveryMethod"
+        class="custome-control-input"
+      />
+      <label for="{{ m.id }}" class="custom-control-label">
+        <strong>{{ m.shortName }}-{{ m.price | currency }}</strong>
+
+      </label>
+      <br />
+      <span class="label-description">{{ m.description }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between flex-row mb-5">
+  <button class="btn btn-outline-primary" cdkStepperPrevious>
+      <i class="fa fa-angle-left"></i> Back to Address
+  </button>
+  <button [disabled]="checkoutForm.get('addressForm')?.invalid" class="btn btn-primary" cdkStepperNext>
+      Go to Review <i class="fa fa-angle-right"></i>
+  </button>
+</div>

@@ -4,6 +4,7 @@ import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
 import { Basket, IBasket, IBasketItem, IBasketTotals } from '../shared/Models/basket';
 import { HttpClient } from '@angular/common/http';
 import { IProduct } from '../shared/Models/product';
+import { IDeliveryMethod } from '../shared/Models/deliveryMethod';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,20 @@ export class BasketService {
   basket$ = this.basketSource.asObservable();
   private basketTotalsSource = new BehaviorSubject<IBasketTotals | null>(null);
   basketTotlas$ = this.basketTotalsSource.asObservable();
+  shipping = 0;
 
   constructor(private http:HttpClient) { }
+
+  setShippingPrice(delivetMethod: IDeliveryMethod){
+    this.shipping = delivetMethod.price;
+    this.calcBasketTotals();
+  }
+
+  deleteLocalBasket() {
+    this.basketSource.next(null);
+    this.basketTotalsSource.next(null);
+    localStorage.removeItem('basket_id');
+  }
 
   getBasket(id:string){
     return this.http.get<Basket>(`${this.baseUrl}?id=${id}`).
@@ -38,6 +51,24 @@ export class BasketService {
         console.log(err);
       }
     })
+  }
+
+  private creatBasket(): IBasket {
+    const basket = new Basket();
+    localStorage.setItem('basketId', basket.id);
+    return basket;
+  }
+
+  private mapProductToBAsketItem(item: IProduct, quantity:number): IBasketItem {
+    return{
+      id:item.id,
+      productName:item.name,
+      price:item.price,
+      quantity:quantity,
+      pictureUrl:item.pictureUrl,
+      type: item.productType,
+      brand:item.productBrand
+    };
   }
 
   getCurrentBasketValue(){
@@ -97,7 +128,7 @@ export class BasketService {
 
   private calcBasketTotals(){
     const basket = this.getCurrentBasketValue();
-      const shipping= 0;
+      const shipping= this.shipping;
       const subTotal= basket?.basketItems.reduce((a,b)=>(b.price*b.quantity+a),0);
       const total= shipping + (subTotal ?? 0);
       this.basketTotalsSource.next({shipping,subTotal,total})
@@ -115,22 +146,6 @@ export class BasketService {
   }
 
 
-  private creatBasket(): IBasket {
-    const basket = new Basket();
-    localStorage.setItem('basketId', basket.id);
-    return basket;
-  }
 
-  private mapProductToBAsketItem(item: IProduct, quantity:number): IBasketItem {
-    return{
-      id:item.id,
-      productName:item.name,
-      price:item.price,
-      quantity:quantity,
-      pictureUrl:item.pictureUrl,
-      type: item.productType,
-      brand:item.productBrand
-    };
-  }
 
 }

@@ -7,6 +7,7 @@
         value="{{ m.id }}"
         formControlName="deliveryMethod"
         class="custome-control-input"
+        (click)="setShippingPrice(m)"
       />
       <label for="{{ m.id }}" class="custom-control-label">
         <strong>{{ m.shortName }}-{{ m.price | currency }}</strong>

@@ -49,11 +49,7 @@ export class ShopComponent implements OnInit {
         this.shopParams.pageSize = response.pageSize
         this.totalCount = response.count
         this.numberOfPages =  Math.ceil(((response.count)/(response.pageSize)));
-        // console.log(this.totalCount)
-        // console.log(this.shopParams.pageSize)
-        // console.log(this.numberOfPages)
         this.pagesArray.length=this.numberOfPages
-        // console.log(this.pagesArray)
       },
       error: error=>{
         console.log(error);

@@ -4,6 +4,7 @@ import { Environment } from '../Environments/environment';
 import { BehaviorSubject, map, of, ReplaySubject } from 'rxjs';
 import { IUser } from '../shared/Models/user';
 import { IAddress } from '../shared/Models/address';
+import { BasketService } from '../basket/basket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<IUser | null>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private basketService:BasketService) { }
 
   // getcurrentUserValue(){
   //   return this.currentUserSource.value;
@@ -38,10 +39,11 @@ export class AccountService {
   }
 
   login(values:any){
+
     return this.http.post<IUser>(`${this.baseUrl}/login`,values).pipe(
       map((user:IUser)=>{
         if(user){
-          localStorage.setItem('token', user.token)
+          localStorage.setItem('token', user.token);
           this.currentUserSource.next(user)
         }
       })

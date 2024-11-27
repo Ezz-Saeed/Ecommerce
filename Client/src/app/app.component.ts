@@ -20,8 +20,6 @@ export class AppComponent implements OnInit {
   }
 
   loadCurrnetUser(){
-
-
       this.accountService.loadCurrentUser(this.token).subscribe({
         next:response=>{
           console.log('Loaded user')

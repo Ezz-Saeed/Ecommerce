@@ -13,7 +13,7 @@ export class BasketSummaryComponent {
   @Output() increment:EventEmitter<IBasketItem> = new EventEmitter<IBasketItem>();
   @Output() decrement:EventEmitter<IBasketItem> = new EventEmitter<IBasketItem>();
   @Output() remove:EventEmitter<IBasketItem> = new EventEmitter<IBasketItem>();
-  @Input () basket:boolean = true;
+  @Input () isBasket:boolean = false;
 
   constructor(private basketService:BasketService){
     this.basket$ = basketService.basket$

@@ -28,6 +28,7 @@ namespace Infrustructure.Services
             {
                 new Claim(JwtRegisteredClaimNames.Email, appUser.Email!),
                 new Claim (JwtRegisteredClaimNames.GivenName, appUser.DisplayName),
+                new Claim("BasketId", appUser.BasketId),
             };
 
             var userCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

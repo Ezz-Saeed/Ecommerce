@@ -12,7 +12,7 @@ pb-3 mb-4 border-bottom fixed-top">
     <a routerLink="basket" class="cart posiotion-relative">
       <i class="fa fa-shopping-cart fa-2x mr-5 text-dark mx-3"></i>
 
-    <div *ngIf="basket$ | async as basket" class="cart-no">{{basket.basketItems.length}}</div>
+    <div *ngIf="(basket$ | async )?.basketItems?.length !==0  && (basket$ | async ) as basket" class="cart-no">{{basket.basketItems.length}}</div>
     </a>
 
     <ng-container *ngIf="(currentUser$ | async)===null as currentUser">

@@ -7,6 +7,8 @@ import { IOrderToCreate } from '../../shared/Models/order';
 import { firstValueFrom } from 'rxjs';
 import { BasketService } from '../../basket/basket.service';
 import { ToastrService } from 'ngx-toastr';
+import { NavigationExtras, Router } from '@angular/router';
+import { state } from '@angular/animations';
 
 @Component({
   selector: 'app-checkout-payment',
@@ -17,7 +19,7 @@ export class CheckoutPaymentComponent {
   @Input() checkoutForm?:FormGroup
 
   constructor(private  checkoutService:CheckoutService,
-    private basketService:BasketService, private toastr:ToastrService){
+    private basketService:BasketService, private toastr:ToastrService, private router:Router){
 
   }
 
@@ -29,7 +31,10 @@ export class CheckoutPaymentComponent {
       next: res=>{
         this.toastr.success('Order submited successfully');
         this.basketService.deleteLocalBasket();
-        console.log(res)
+        this.basketService.lodaBasket();
+        const nvavigationExtras:NavigationExtras = {state:res}
+        this.router.navigate(['checkout/success'],nvavigationExtras)
+        // console.log(res)
       },
       error:err=>{
         this.toastr.error(err.message);

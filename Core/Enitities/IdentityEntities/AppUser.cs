@@ -11,5 +11,6 @@ namespace Core.Enitities.IdentityEntities
     {
         public string DisplayName { get; set; }
         public Address? Address { get; set; }
+        public string BasketId { get; set; }
     }
 }

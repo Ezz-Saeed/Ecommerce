@@ -38,12 +38,15 @@ export class AccountService {
     )
   }
 
-  login(values:any){
+  login(values:IUser){
 
     return this.http.post<IUser>(`${this.baseUrl}/login`,values).pipe(
       map((user:IUser)=>{
         if(user){
           localStorage.setItem('token', user.token);
+          localStorage.setItem('basketId', user.basketId);
+          let b = this.basketService.lodaBasket();
+          console.log('basket: '+ b)
           this.currentUserSource.next(user)
         }
       })
@@ -51,7 +54,9 @@ export class AccountService {
   }
 
 
-  register(values:any){
+  register(values:IUser){
+    let basket = this.basketService.creatBasket();
+    values.basketId = basket.id
     return this.http.post<IUser>(`${this.baseUrl}/register`,values).pipe(
       map((user:IUser)=>{
         if(user){
@@ -64,6 +69,8 @@ export class AccountService {
 
   logout(){
     localStorage.removeItem('token');
+    localStorage.removeItem('basketId');
+    this.basketService.basketSource.next(null)
     this.currentUserSource.next(null);
   }
 

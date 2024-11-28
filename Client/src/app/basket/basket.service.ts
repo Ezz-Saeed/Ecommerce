@@ -12,7 +12,7 @@ import { IDeliveryMethod } from '../shared/Models/deliveryMethod';
 export class BasketService {
 
   baseUrl = `${Environment.baseUrl}basket`;
-  private basketSource = new BehaviorSubject<IBasket | null>(null);
+   basketSource = new BehaviorSubject<Basket | null>(null);
   basket$ = this.basketSource.asObservable();
   private basketTotalsSource = new BehaviorSubject<IBasketTotals | null>(null);
   basketTotlas$ = this.basketTotalsSource.asObservable();
@@ -28,7 +28,6 @@ export class BasketService {
   deleteLocalBasket() {
     this.basketSource.next(null);
     this.basketTotalsSource.next(null);
-    localStorage.removeItem('basket_id');
   }
 
   getBasket(id:string){
@@ -53,9 +52,10 @@ export class BasketService {
     })
   }
 
-  private creatBasket(): IBasket {
+  public creatBasket(): IBasket {
     const basket = new Basket();
     localStorage.setItem('basketId', basket.id);
+    this.setBasket(basket);
     return basket;
   }
 
@@ -77,7 +77,10 @@ export class BasketService {
 
   addItemToBasket(item: IProduct, quantity:number){
     const itemToAdd: IBasketItem = this.mapProductToBAsketItem(item, quantity);
-    const basket = this.getCurrentBasketValue() ?? this.creatBasket();
+    const basket = this.getCurrentBasketValue();
+    if(!basket)
+      throw new Error('Null basket')
+    console.log(this.getCurrentBasketValue)
     basket.basketItems = this.addOrUpdateItem(basket.basketItems, itemToAdd, quantity);
     this.setBasket(basket);
   }
@@ -106,8 +109,10 @@ export class BasketService {
       basket.basketItems = basket.basketItems.filter(i=>i.id!==item.id)
       if(basket.basketItems.length>0){
         this.setBasket(basket);
-      }else{
+      }
+      else{
         this.removeBasket(basket);
+        this.lodaBasket();
       }
     }
   }
@@ -116,7 +121,7 @@ export class BasketService {
       next: response=>{
         this.basketSource.next(null);
         this.basketTotalsSource.next(null);
-        localStorage.removeItem("basketId");
+        // localStorage.removeItem("basketId");
       },
       error:err=>{
         console.log(err);
@@ -146,6 +151,17 @@ export class BasketService {
   }
 
 
-
-
+  lodaBasket(){
+    const basketID = localStorage.getItem('basketId');
+    if(basketID){
+      this.getBasket(basketID).subscribe({
+        next: response=>{
+          console.log('initialized basket')
+        },
+        error:err=>{
+          console.log(err);
+        }
+      })
+    }
+  }
 }

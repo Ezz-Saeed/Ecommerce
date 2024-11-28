@@ -41,7 +41,8 @@ namespace API.Controllers
             {
                 Email = user.Email!,
                 DisplayName = user.DisplayName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                BasketId = user.BasketId,
             };
 
         }
@@ -93,7 +94,8 @@ namespace API.Controllers
             {
                 Email = user.Email!,
                 DisplayName = user.DisplayName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                BasketId = user.BasketId,
             };
         }
 
@@ -109,6 +111,7 @@ namespace API.Controllers
                 DisplayName = registerDto.DisplayName,
                 Email = registerDto.Email,
                 UserName = registerDto.Email,
+                BasketId = registerDto.BasketId
             };
 
             var result = await userManager.CreateAsync(user,registerDto.Password);
@@ -120,7 +123,8 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 DisplayName = user.DisplayName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                BasketId = user.BasketId,
             };
         }
     }

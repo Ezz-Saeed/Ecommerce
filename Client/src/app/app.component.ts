@@ -15,14 +15,16 @@ export class AppComponent implements OnInit {
   constructor(private basketService:BasketService, private accountService:AccountService){}
 
   ngOnInit(): void {
-    this.lodaBasket();
+    // this.lodaBasket();
     this.loadCurrnetUser();
+    this.basketService.lodaBasket();
   }
 
   loadCurrnetUser(){
       this.accountService.loadCurrentUser(this.token).subscribe({
         next:response=>{
           console.log('Loaded user')
+
         },
         error:err=>{
           console.log(err)
@@ -31,18 +33,5 @@ export class AppComponent implements OnInit {
 
   }
 
-  lodaBasket(){
-    const basketID = localStorage.getItem('basketId');
-    if(basketID){
-      this.basketService.getBasket(basketID).subscribe({
-        next: response=>{
-          console.log('initialized basket')
-        },
-        error:err=>{
-          console.log(err);
-        }
-      })
-    }
-  }
 
 }

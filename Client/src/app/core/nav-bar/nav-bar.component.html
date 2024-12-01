@@ -6,13 +6,13 @@ pb-3 mb-4 border-bottom fixed-top">
     <a class="me-3 py-2 link-body-emphasis" routerLink="/" routerLinkActive="active"
     [routerLinkActiveOptions]="{exact:true}">home</a>
     <a class="me-3 py-2 link-body-emphasis" routerLink="shop" routerLinkActive="active">shop</a>
-    <a class="me-3 py-2 link-body-emphasis" routerLink="test-error" routerLinkActive="active">Error</a>
+    <!-- <a class="me-3 py-2 link-body-emphasis" routerLink="test-error" routerLinkActive="active">Error</a> -->
   </nav>
   <div class="d-flex align-items-center justify-content-between">
     <a routerLink="basket" class="cart posiotion-relative">
       <i class="fa fa-shopping-cart fa-2x mr-5 text-dark mx-3"></i>
-
-    <div *ngIf="(basket$ | async )?.basketItems?.length !==0  && (basket$ | async ) as basket" class="cart-no">{{basket.basketItems.length}}</div>
+    <div *ngIf="(basket$ | async )?.basketItems?.length !==0  && (basket$ | async )
+    as basket" class="cart-no">{{basket.basketItems.length}}</div>
     </a>
 
     <ng-container *ngIf="(currentUser$ | async)===null as currentUser">
@@ -35,7 +35,8 @@ pb-3 mb-4 border-bottom fixed-top">
       </div> -->
       <div class="d-flex justify-content-between mx-3">
         <strong><a>Welcome {{currentUser.displayName}}</a></strong>
-        <a style="cursor: pointer;" (click)="logOut()" class="mx-3">Logout</a>
+        <a style="cursor: pointer;" class="mx-3" routerLink="orders">Orders</a>
+        <a style="cursor: pointer;" (click)="logOut()" >Logout</a>
       </div>
     </ng-container>
 

@@ -26,12 +26,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Order>>> GetOrdersForUser()
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetOrdersForUser()
         {
             var email = User.GetEmailFromPrincipal();
 
             var orders = await orderService.GetOrdersForUserAsync(email);
-            return Ok(orders);
+            var orderDtos = mapper.Map<IReadOnlyList<Order>, IReadOnlyList< OrderToReturnDto >> (orders);
+            return Ok(orderDtos);
         }
 
         [HttpGet("{id}")]

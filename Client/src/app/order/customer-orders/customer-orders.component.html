@@ -1,0 +1,21 @@
+<div class="container mt-5">
+  <table class="table" *ngIf="orders">
+    <thead >
+      <tr class="table-active">
+        <th scope="col">Order</th>
+        <th scope="col">Date</th>
+        <th scope="col">Total</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="cursor: pointer;" *ngFor="let order of orders" [routerLink]="['/orders',order.id]">
+        <th ><strong># {{order.id}}</strong></th>
+        <td>{{order.orderDate | date:'medium'}}</td>
+        <td>{{order.total | currency}}</td>
+        <td>{{order.status}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>

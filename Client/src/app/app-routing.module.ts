@@ -22,6 +22,7 @@ const routes: Routes = [
     then(module=>module.AccountModule),data:{breadcrumb:{skip:true}}},
   {path:'checkout',loadChildren:()=>import('./checkout/checkout.module').
     then(module=>module.CheckoutModule),canActivate:[authGuard]},
+  {path:'orders', loadChildren:()=>import('./order/order.module').then(module=>module.OrderModule)},
   // {path:'shop/:id', component:ProductDetailsComponent},
   {path:'**', redirectTo:'not-found', pathMatch:'full',  data:{breadcrumb:'Not Found'}},
 ];

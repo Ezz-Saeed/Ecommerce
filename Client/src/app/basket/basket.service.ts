@@ -12,7 +12,7 @@ import { IDeliveryMethod } from '../shared/Models/deliveryMethod';
 export class BasketService {
 
   baseUrl = `${Environment.baseUrl}basket`;
-   basketSource = new BehaviorSubject<Basket | null>(null);
+   basketSource = new BehaviorSubject<IBasket | null>(null);
   basket$ = this.basketSource.asObservable();
   private basketTotalsSource = new BehaviorSubject<IBasketTotals | null>(null);
   basketTotlas$ = this.basketTotalsSource.asObservable();
@@ -22,7 +22,24 @@ export class BasketService {
 
   setShippingPrice(delivetMethod: IDeliveryMethod){
     this.shipping = delivetMethod.price;
+    const basket = this.getCurrentBasketValue();
+    if(basket){
+      basket.deliveryMethodId = delivetMethod.id;
+      basket.shippingPrice = delivetMethod.price;
+    }
+
     this.calcBasketTotals();
+    this.setBasket(basket)
+  }
+
+  createPaymentIntent(){
+    return this.http.post<IBasket>(`${Environment.baseUrl}Payment/${this.getCurrentBasketValue()?.id}`,
+    {}).pipe(
+      map((basket:IBasket)=>{
+        this.basketSource.next(basket)
+        console.log(this.getCurrentBasketValue())
+      })
+    )
   }
 
   deleteLocalBasket() {
@@ -31,16 +48,17 @@ export class BasketService {
   }
 
   getBasket(id:string){
-    return this.http.get<Basket>(`${this.baseUrl}?id=${id}`).
+    return this.http.get<IBasket>(`${this.baseUrl}?id=${id}`).
     pipe(
-      map((basket:Basket)=>{
+      map((basket:IBasket)=>{
         this.basketSource.next(basket);
+        this.shipping = basket.shippingPrice ?? 0;
         this.calcBasketTotals();
       })
     );
   }
 
-  setBasket(basket: Basket){
+  setBasket(basket: IBasket | null){
     return this.http.post<Basket>(this.baseUrl, basket).subscribe({
       next: response=>{
         this.basketSource.next(response)

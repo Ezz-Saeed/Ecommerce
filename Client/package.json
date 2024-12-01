@@ -24,6 +24,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@stripe/stripe-js": "^5.2.0",
     "angular": "^1.8.3",
     "bootstrap": "^5.2.3",
     "bootswatch": "^5.3.3",

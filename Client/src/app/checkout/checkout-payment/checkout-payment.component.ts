@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { CheckoutService } from '../checkout.service';
-import { Basket } from '../../shared/Models/basket';
+import { Basket, IBasket } from '../../shared/Models/basket';
 import { FormGroup } from '@angular/forms';
 import { IAddress } from '../../shared/Models/address';
 import { IOrderToCreate } from '../../shared/Models/order';
@@ -27,20 +27,24 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   cardCvc?: StripeCardCvcElement;
   cardErrors?:any;
   cardHandler = this.onCange.bind(this);
-  // cardNumberComplete = false;
-  // cardExpiryComplete = false;
-  // cardCvcComplete = false;
-  // loading = false;
+  loading = false;
+  cardNumberComplete = false;
+  cardExpiryComplete = false;
+  cardCvcComplete = false;
 
   constructor(private  checkoutService:CheckoutService,
     private basketService:BasketService, private toastr:ToastrService, private router:Router){
 
   }
+
+
   ngOnDestroy(): void {
     this.cardCvc?.destroy();
     this.cardExpiry?.destroy();
     this.cardNumber?.destroy();
   }
+
+
   ngAfterViewInit(): void {
     loadStripe(`pk_test_51QQYS2FDUMd19t5RqhyQut0mKqgGWVFJTgX9Rdjxg
       Ojzt8tIW8jEOOCjWZwffiFfyGiXQEazZoDqCbiApLNRTVFW00w4QwIn9S`).then(stripe=>{
@@ -62,52 +66,74 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
       })
   }
 
-  onCange({error}:any){
-    if(error){
-      this.cardErrors = error.message;
+
+  onCange(event:any){
+    if(event.error){
+      this.cardErrors = event.error.message;
     }else{
       this.cardErrors = null;
     }
+    switch(event.elementType){
+      case 'cardNumber':
+        this.cardNumberComplete = event.complete;
+        break;
+
+      case 'cardExpiry':
+        this.cardExpiryComplete = event.complete;
+        break;
+
+      case 'cardCvc':
+        this.cardCvcComplete = event.complete;
+        break;
+    }
   }
+
 
   async submitOrder() {
+    this.loading =true;
     const basket = this.basketService.getCurrentBasketValue();
     if (!basket) throw new Error('cannot get basket');
-    const orderToCreate = this.getOrderToCreate(basket);
-    this.checkoutService.createOrder(orderToCreate).subscribe({
-      next: order=>{
-        if(basket.clientSecret){
-          this.stripe?.confirmCardPayment( basket.clientSecret,{
-            payment_method:{
-              card:this.cardNumber,
-              billing_details: this.checkoutForm?.get('paymentForm')?.get('nameOfCard')?.value
-            }
-          }).then(res=>{
-            if(res.paymentIntent){
-              console.log(res)
-              this.toastr.success('Order submited successfully');
-              this.basketService.deleteLocalBasket();
-              this.basketService.lodaBasket();
-              const nvavigationExtras:NavigationExtras = {state:order}
-              this.router.navigate(['checkout/success'],nvavigationExtras)
-            }else{
-              this.toastr.error('Payment process failed')
-             }
-          })
-        }else{
-         this.toastr.error('Payment process failed')
-        }
 
+    try{
+    const orderToCreate = await this.createOrder(basket);
+    const paymentResult = await this.confirmPaymentWithStripe(basket);
 
-      },
-      error:err=>{
-        this.toastr.error(err.message);
-        console.log(err)
-      }
-    });
-
+    if(paymentResult?.paymentIntent){
+      this.toastr.success('Order submited successfully');
+      this.basketService.removeBasket(basket);
+      this.basketService.lodaBasket();
+      const nvavigationExtras:NavigationExtras = {state:orderToCreate}
+      this.router.navigate(['checkout/success'],nvavigationExtras)
+    }else{
+      this.toastr.error(paymentResult?.error.message)
+     }
+     this.loading = false;
+    }catch(ex){
+      console.log(ex)
+      this.loading = false
+    }
   }
 
+
+  confirmPaymentWithStripe(basket:IBasket) {
+    if(basket.clientSecret){
+      return this.stripe?.confirmCardPayment( basket.clientSecret,{
+        payment_method:{
+          card:this.cardNumber,
+          billing_details: this.checkoutForm?.get('paymentForm')?.get('nameOfCard')?.value
+        }
+      })
+    }else{
+      this.toastr.error('Payment process failed')
+      return null;
+    }
+  }
+
+
+  async createOrder(basket:IBasket){
+    const orderToCreate = this.getOrderToCreate(basket);
+    return this.checkoutService.createOrder(orderToCreate).toPromise();
+  }
 
   getOrderToCreate(basket:Basket ): IOrderToCreate{
     const deliveryMethodId = this.checkoutForm?.get('deliveryForm')?.get('deliveryMethod')?.value;
@@ -122,3 +148,5 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   }
 
 }
+
+

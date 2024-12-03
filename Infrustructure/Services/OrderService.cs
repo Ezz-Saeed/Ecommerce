@@ -2,6 +2,7 @@
 using Core.Enitities.OrderAggregate;
 using Core.Interfaces;
 using Core.Specifications;
+using Core.Specifications;
 using Infrustructure.Data;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ using System.Threading.Tasks;
 
 namespace Infrustructure.Services
 {
-    public class OrderService(IUntiOfWork untiOfWork, IBasketRepository basketRepo) : IOrderService
+    public class OrderService(IUntiOfWork untiOfWork, IBasketRepository basketRepo, 
+        IPaymentService paymentService) : IOrderService
     {
         
         public async Task<Order> CreateOrderAsync(string buerEmail, int deliveryMethodId, string basketId, Address address)
@@ -35,9 +37,19 @@ namespace Infrustructure.Services
             var deliveryMethod = await untiOfWork.Repository<DeliveryMethod>().FindAsync(deliveryMethodId);
             //calc subtotal
             var subTotal = items.Sum(i => i.Price * i.Quantity);
+
+            //Check if order exists
+            var spec = new OrderByPaymentIntentIdSpec(basket.PaymentIntentId);
+            var existingOrder = await untiOfWork.Repository<Order>().GetEntityWithSpec(spec);
+            if (existingOrder is not null)
+            {
+                 untiOfWork.Repository<Order>().Delete(existingOrder);
+                 await paymentService.CreateOrUpdatePaymentIntent(basket.PaymentIntentId);
+            }
             //create order
-            var order = new Order(items, buerEmail, address, deliveryMethod, subTotal);
+            var order = new Order(items, buerEmail, address, deliveryMethod, subTotal, basket.PaymentIntentId);
             untiOfWork.Repository<Order>().Add(order);
+            
 
             //save order to db
             int result = 0;
@@ -53,9 +65,7 @@ namespace Infrustructure.Services
             //delete basket when success
             if (result <= 0)
                 return null;
-
-            await basketRepo.DeleteBasketAsync(basketId);
-
+            
             return order;
         }
 

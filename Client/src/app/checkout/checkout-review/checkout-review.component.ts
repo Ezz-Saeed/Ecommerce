@@ -16,12 +16,12 @@ export class CheckoutReviewComponent {
   createPaymentIntent(){
     this.basketService.createPaymentIntent().subscribe({
       next:res=>{
-        this.toastr.success('Payment intent created')
+        // this.toastr.success('Payment intent created')
         this.appStepper.next();
       },
       error:err=>{
         console.log(err)
-        this.toastr.error(err.message)
+        // this.toastr.error(err.message)
       }
     })
   }

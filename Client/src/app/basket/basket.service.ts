@@ -5,6 +5,7 @@ import { Basket, IBasket, IBasketItem, IBasketTotals } from '../shared/Models/ba
 import { HttpClient } from '@angular/common/http';
 import { IProduct } from '../shared/Models/product';
 import { IDeliveryMethod } from '../shared/Models/deliveryMethod';
+import { AccountService } from '../account/account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -139,7 +140,7 @@ export class BasketService {
       next: response=>{
         this.basketSource.next(null);
         this.basketTotalsSource.next(null);
-        // localStorage.removeItem("basketId");
+        localStorage.removeItem("basketId");
       },
       error:err=>{
         console.log(err);
@@ -168,6 +169,17 @@ export class BasketService {
     return basketItems;
   }
 
+  updateUserBasketId(id:string){
+    return this.http.put<string>(`${this.baseUrl}/upadtebasketid/${id}`,{}).subscribe({
+      next: response=>{
+        localStorage.setItem('basketId',response);
+        console.log(response)
+      },
+      error:err=>{
+        console.log(err);
+      }
+    });
+  }
 
   lodaBasket(){
     const basketID = localStorage.getItem('basketId');
@@ -179,6 +191,15 @@ export class BasketService {
         error:err=>{
           console.log(err);
         }
+      })
+    }else{
+      let basket = this.creatBasket();
+      this.updateUserBasketId(basket.id);
+      this.getBasket(basket.id).subscribe({
+        next:res=>{
+          console.log(res)
+        },
+        error:err=>console.log(err)
       })
     }
   }

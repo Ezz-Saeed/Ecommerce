@@ -17,7 +17,7 @@ export class PagerComponent {
 
   onPagerChanges(page:number){
     this.pageNumber = page;
-    this.pageChanged.emit(page)
+    this.pageChanged.emit(this.pageNumber)
   }
 
   onPreviousPage(){

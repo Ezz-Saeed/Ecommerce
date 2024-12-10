@@ -1,15 +1,16 @@
-li{
+.list-group-item {
   cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.1em;
+
+  &.active {
+      border-radius: 10px;
+  }
+
+  &:not(.active):hover {
+      color: #fff;
+      background-color: rgba(233, 84, 32, 0.7);
+      border-radius: 10px;
+  }
 }
-
-// .filter{
-//   position: fixed;
-//   top: 18%;
-//   left: 15%;
-//   width: 10%;
-
-// }
-
-// .container{
-//   margin-top: 50px;
-// }

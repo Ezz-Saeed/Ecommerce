@@ -99,13 +99,13 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     const paymentResult = await this.confirmPaymentWithStripe(basket);
 
     if(paymentResult?.paymentIntent){
-      this.toastr.success('Order submited successfully');
+      // this.toastr.success('Order submited successfully');
       this.basketService.removeBasket(basket);
       this.basketService.lodaBasket();
       const nvavigationExtras:NavigationExtras = {state:orderToCreate}
       this.router.navigate(['checkout/success'],nvavigationExtras)
     }else{
-      this.toastr.error(paymentResult?.error.message)
+      // this.toastr.error(paymentResult?.error.message)
      }
      this.loading = false;
     }catch(ex){
@@ -124,7 +124,7 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
         }
       })
     }else{
-      this.toastr.error('Payment process failed')
+      // this.toastr.error('Payment process failed')
       return null;
     }
   }

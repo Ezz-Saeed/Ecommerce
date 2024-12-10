@@ -11,6 +11,7 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IResponseCasheService, ResponseCasheService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUntiOfWork, UntiOfWork>();
             services.AddScoped<IPaymentService, PaymentService>();
@@ -21,7 +22,7 @@ namespace API.Extensions
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
                 var options = ConfigurationOptions.Parse
-                (configuration.GetConnectionString("Redis"));
+                (configuration.GetConnectionString("Redis")!);
                 return ConnectionMultiplexer.Connect(options);
             });
             services.Configure<ApiBehaviorOptions>(options =>
